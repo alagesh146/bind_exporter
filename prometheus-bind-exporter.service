@@ -1,0 +1,21 @@
+[Unit]
+Description=Prometheus BIND Exporter
+After=network.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecStart=/usr/local/bin/bind_exporter \
+  -web.telemetry-path=/bind_metrics \
+  -bind.pid-file=/var/run/named/named.pid \
+  -bind.stats-groups=server,view,tasks
+
+SyslogIdentifier=prometheus_bind_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+
