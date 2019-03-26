@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+  - name: Add the user 'prometheus'
+    user:
+      name: prometheus
+      comment: Prometheus Agent
+      shell: /sbin/nologin
+
+
+  - name: download bind exporter
+    get_url: 
+      url: https://github.com/alagesh146/bind_exporter/raw/master/bind_exporter
+      dest: /usr/local/sbin/bind_exporter
+      mode: 0755
+    
+   
+  - name: download systemd file
+    get_url: 
+      url: https://raw.githubusercontent.com/alagesh146/bind_exporter/master/prometheus-bind-exporter.service
+      dest: /etc/systemd/system/
+  
+  - name: systemctl reload 
+    shell: systemctl daemon-reload
+  
+  
+    
+  - name: enable bind-eporter service and ensure it is not masked
+    systemd:
+     name: bind-exporter
+     enabled: yes
+     masked: no
+  - name: Make sure a service is running
+    systemd:
+     state: started
+     name: bind-exporter
+  - name: Crete firewall rules
+    shell: firewall-cmd --add-port=9119/tcp && firewall-cmd --add-port=9119/tcp --permanent
