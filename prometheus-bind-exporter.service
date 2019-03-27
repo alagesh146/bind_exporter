@@ -7,7 +7,7 @@ Type=simple
 User=prometheus
 Group=prometheus
 ExecStart=/usr/local/bin/bind_exporter \
-  -web.telemetry-path=/bind_metrics \
+  -web.telemetry-path=/metrics \
   -bind.pid-file=/var/run/named/named.pid \
   -bind.stats-groups=server,view,tasks
 
